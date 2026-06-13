@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Burnout & Depression Test</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            /* Mist Theme */
+            --color-text-strong: #1a1c22;
+            --color-text-primary: #1a1c22;
+            --color-text-secondary-strong: #1a1c22b3;
+            --color-text-secondary: #1a1c2299;
+            --color-text-muted: #1a1c2280;
+            --color-text-muted-strong: #1a1c2266;
+            --color-text-muted-soft: #1a1c2240;
+            --color-text-accent: #7a808e;
+            --color-text-accent-soft: #dcdde2;
+            --color-text-brand: #7a808e;
+            --color-text-brand-strong: #5e6470;
+            --color-text-brand-soft: #dcdde2;
+            --color-text-footer-muted: #9aa0ae;
+            --color-text-footer-cta: #7a808e;
+            --color-text-number: #1a1c22;
+            --color-text-rating: #7a808e;
+            --color-text-inverse: #ededef;
+            --color-surface-card: #f5f5f7;
+            --color-surface-muted: #ededef;
+            --color-surface-alt: #dcdde2;
+            --color-surface-footer: #1a1c22;
+            --color-surface-footer-muted: #1a1c22;
+            --color-surface-inverse: #7a808e;
+            --color-surface-inverse-hover: #5e6470;
+            --color-surface-disabled: #dcdde2;
+            --color-surface-hover-accent: #dcdde2;
+            --color-brand-primary: #7a808e;
+            --color-brand-primary-strong: #5e6470;
+            --color-brand-primary-soft: #dcdde2;
+            --color-accent-primary: #7a808e;
+            --color-accent-soft: #dcdde2;
+            --color-border-default: #caccd2;
+            --color-border-muted: #dcdde2;
+            --color-border-strong: #7a808e;
+            --color-border-accent: #7a808e;
+            --color-border-brand: #7a808e;
+            --color-border-inverse: #f5f5f7;
+            --color-border-inverse-muted: #caccd2;
+            --gradient-page: linear-gradient(180deg,#ededef,#dcdde2);
+            --gradient-hero: linear-gradient(180deg,#ededef,#dcdde2,#ededef);
+            --gradient-badge: linear-gradient(90deg,#dcdde2,#7a808e);
+
+            /* Theme Mapping */
+            --bg-color: var(--color-surface-muted);
+            --bg-quiet: var(--color-surface-alt);
+            --card-bg: var(--color-surface-card);
+            --accent: var(--color-brand-primary);
+            --text-main: var(--color-text-primary);
+            --text-sub: var(--color-text-secondary);
+            --border: var(--color-border-default);
+            --popup-bg: var(--color-surface-card);
+            
+            /* Semantic Colors (Retained for test logic) */
+            --red: #c0392b;
+            --yellow: #FACC15;
+            --green: #4ADE80;
+            --font: 'Inter', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: var(--font);
+            transition: background-color 1s ease;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* RTL Support overrides */
+        [dir="rtl"] {
+            text-align: right;
+        }
+        [dir="rtl"] .app-header-brand {
+            flex-direction: row-reverse;
+        }
+        [dir="rtl"] #notification-popup {
+            border-left: none;
+            border-right: 3px solid var(--accent);
+            text-align: right;
+        }
+        [dir="rtl"] .slider-labels {
+            flex-direction: row-reverse;
+        }
+
+        /* --- APP HEADER --- */
+        .app-header {
+            position: fixed;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100vw;
+            z-index: 150;
+            transition: top 0.3s ease;
+        }
+        .app-header-inner {
+            background-color: rgba(245, 245, 247, 0.95); /* fallback */
+            background-color: color-mix(in srgb, var(--color-surface-card) 95%, transparent);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--color-border-default);
+        }
+        .app-header-content {
+            margin: 0 auto;
+            max-width: 64rem;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            padding: 0.5rem 1.5rem;
+        }
+        @media (min-width: 640px) {
+            .app-header-content {
+                padding-left: 2rem;
+                padding-right: 2rem;
+            }
+        }
+        .app-header-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--color-text-primary);
+            text-decoration: none;
+        }
+        .app-logo-icon {
+            width: 1.75rem;
+            height: 1.75rem;
+        }
+        .app-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-text-strong);
+        }
+        .app-header-progress-track {
+            height: 0.25rem;
+            width: 100%;
+            background-color: var(--color-surface-muted);
+        }
+        .app-header-progress-fill {
+            height: 100%;
+            background-color: var(--color-brand-primary);
+        }
+
+        #app {
+            width: 100%;
+            max-width: 430px;
+            height: 100dvh;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            background-color: inherit;
+        }
+
+        /* --- BATTERY --- */
+        #battery-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 24px;
+            position: absolute;
+            top: 56px;
+            width: 100%;
+            z-index: 10;
+        }
+        .battery-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 10px 20px;
+            border-radius: 24px;
+            backdrop-filter: blur(8px);
+            border: 1px solid var(--border);
+        }
+        .battery-icon {
+            width: 50px;
+            height: 24px;
+            border: 2px solid var(--text-main);
+            border-radius: 6px;
+            position: relative;
+            padding: 2.5px;
+        }
+        .battery-icon::after {
+            content: '';
+            position: absolute;
+            right: -7px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 4px;
+            height: 10px;
+            background: var(--text-main);
+            border-radius: 0 3px 3px 0;
+        }
+        [dir="rtl"] .battery-icon::after {
+            right: auto;
+            left: -7px;
+            border-radius: 3px 0 0 3px;
+        }
+        .battery-fill {
+            height: 100%;
+            width: 100%;
+            background: var(--green);
+            border-radius: 2px;
+            transition: width 0.4s ease, background-color 0.4s ease, box-shadow 0.4s ease;
+        }
+        .battery-text {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--green);
+            transition: color 0.4s ease;
+        }
+
+        /* --- QUESTION SLIDES --- */
+        #question-container {
+            flex: 1;
+            position: relative;
+            margin-top: 120px;
+        }
+        .question-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateX(30px);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        [dir="rtl"] .question-slide {
+            transform: translateX(-30px);
+        }
+        .question-slide.active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateX(0);
+        }
+        .question-slide.prev {
+            transform: translateX(-30px);
+            opacity: 0;
+        }
+        [dir="rtl"] .question-slide.prev {
+            transform: translateX(30px);
+        }
+
+        /* --- TYPOGRAPHY --- */
+        .q-title { font-size: 26px; font-weight: 700; line-height: 1.35; margin-bottom: 32px; }
+        .q-subtitle { font-size: 18px; font-weight: 600; margin-bottom: 24px; }
+        .scene-text { font-size: 15px; color: var(--text-sub); font-style: italic; margin-bottom: 24px; line-height: 1.6; }
+        .small-subtitle { font-size: 13px; color: var(--text-sub); margin-bottom: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+
+        /* --- SMILEYS --- */
+        .smileys-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 16px; 
+            width: 100%; 
+        }
+        .smiley-card {
+            background: var(--card-bg); border: 2px solid var(--border);
+            border-radius: 16px; padding: 32px 12px; display: flex; flex-direction: column;
+            align-items: center; gap: 14px; cursor: pointer; transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .smiley-card.selected { 
+            border-color: var(--accent); background: var(--color-surface-hover-accent); 
+            transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.05);
+        }
+        .smiley-card.dimmed { opacity: 0.4; }
+        .smiley-icon { font-size: 54px; line-height: 1; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.05)); }
+        .smiley-label { font-size: 15px; font-weight: 600; color: var(--text-strong); }
+
+        /* --- QUIET MODE --- */
+        .quiet-mode .delay-fade { opacity: 0; animation: fadeIn 0.8s ease forwards; }
+        .quiet-mode .delay-fade:nth-child(1) { animation-delay: 0.3s; }
+        .quiet-mode .delay-fade:nth-child(2) { animation-delay: 0.6s; }
+        .quiet-mode .delay-fade:nth-child(3) { animation-delay: 0.9s; }
+        @keyframes fadeIn { to { opacity: 1; } }
+
+        /* --- IMAGE PLACEHOLDERS --- */
+        .img-loading {
+            opacity: 0 !important;
+        }
+        .img-placeholder {
+            background: linear-gradient(90deg, var(--color-surface-alt) 25%, var(--color-surface-card) 50%, var(--color-surface-alt) 75%);
+            background-size: 200% 100%;
+            animation: loadingSkeleton 1.5s infinite;
+            position: relative;
+        }
+        .img-placeholder::after {
+            content: attr(data-loading-text);
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: var(--text-sub);
+            font-size: 13px;
+            font-weight: 500;
+            z-index: 0;
+        }
+        @keyframes loadingSkeleton {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        /* --- SLIDER Q2 (was Q3) --- */
+        .slider-container { display: flex; flex-direction: column; gap: 20px; width: 100%; }
+        .transition-img-container {
+            width: 100%;
+            aspect-ratio: 3 / 1;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            margin-bottom: 5px;
+            background: var(--border);
+        }
+        .q3-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: filter 0.2s ease, opacity 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .slider-wrapper { position: relative; width: 100%; margin-bottom: 10px; }
+        .custom-slider {
+            -webkit-appearance: none; width: 100%; height: 12px; border-radius: 6px;
+            background: linear-gradient(to right, #FACC15 50%, var(--border) 50%);
+            outline: none; position: relative;
+            direction: ltr;
+            --thumb-color: #FACC15;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+        }
+        .custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none; width: 32px; height: 32px; border-radius: 50%;
+            background: #fff; cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2), 0 0 0 5px var(--thumb-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .custom-slider::-webkit-slider-thumb:active {
+            transform: scale(1.15);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3), 0 0 0 6px var(--thumb-color);
+        }
+        .slider-labels { 
+            display: flex; justify-content: space-between; font-size: 13px; 
+            color: var(--text-sub); margin-top: 16px; font-weight: 600; 
+            text-transform: uppercase; letter-spacing: 0.5px; 
+        }
+        .next-btn {
+            background: var(--card-bg); color: var(--text-sub); border: 1px solid var(--border);
+            padding: 14px; border-radius: 12px; font-size: 16px; font-weight: 500;
+            cursor: pointer; transition: 0.3s; margin-top: 10px; pointer-events: none;
+        }
+        .next-btn.active { background: var(--accent); border-color: var(--accent); color: var(--color-text-inverse); pointer-events: auto; }
+
+        /* --- GRID Q4 (was Q6) --- */
+        .image-map-container {
+            position: relative;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: crosshair;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            background: var(--color-surface-alt);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .q6-image {
+            width: 100%;
+            height: auto;
+            max-height: 60vh;
+            object-fit: contain;
+            display: block;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            position: relative;
+            z-index: 1;
+        }
+        .marker {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            background: var(--accent);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            border: 3px solid #fff;
+            display: none;
+            box-shadow: 0 0 15px var(--accent);
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        /* --- CINEMATIC LOADING SCREEN --- */
+        #cinematic-loader {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 100; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 80px 24px 24px;
+            text-align: center; opacity: 0; transition: opacity 1s ease;
+        }
+        .orb-container { 
+            position: relative; width: 160px; height: 160px; margin-bottom: 40px; 
+            display: flex; justify-content: center; align-items: center; 
+        }
+        .glow-ring {
+            position: absolute; width: 100%; height: 100%; border-radius: 50%;
+            border: 2px solid transparent; border-top-color: var(--accent); border-bottom-color: var(--accent);
+            animation: spin 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+            box-shadow: 0 0 40px rgba(123, 97, 255, 0.2), inset 0 0 20px rgba(123, 97, 255, 0.1);
+            transition: border-color 0.5s ease, box-shadow 0.5s ease;
+        }
+        .glow-ring-inner {
+            position: absolute; width: 70%; height: 70%; border-radius: 50%;
+            border: 1px solid transparent; border-left-color: var(--text-sub); border-right-color: var(--text-sub);
+            animation: spin-reverse 4s linear infinite; opacity: 0.4;
+        }
+        .loader-perc { 
+            font-size: 32px; font-weight: 700; color: var(--text-main); 
+            font-variant-numeric: tabular-nums; z-index: 2; 
+            text-shadow: 0 0 15px rgba(0,0,0,0.1); 
+        }
+        .loader-status { 
+            font-size: 12px; color: var(--text-main); letter-spacing: 2px; 
+            text-transform: uppercase; font-weight: 600; height: 20px; 
+            animation: pulseText 2s infinite; margin-bottom: 30px; 
+            transition: color 0.5s ease; 
+        }
+        .data-stream {
+            font-family: 'Courier New', Courier, monospace; font-size: 10px; color: var(--text-sub);
+            opacity: 0.5; height: 60px; overflow: hidden; text-align: center; width: 100%;
+            mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+            -webkit-mask-image: linear-gradient(to bottom, transparent, black 30%, black 70%, transparent);
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        [dir="rtl"] .data-stream { direction: ltr; }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes spin-reverse { 0% { transform: rotate(360deg); } 100% { transform: rotate(0deg); } }
+        @keyframes pulseText { 0%, 100% { opacity: 0.6; } 50% { opacity: 1; text-shadow: 0 0 10px rgba(0,0,0,0.1); } }
+
+        /* --- CHECKOUT / RESULT VIEW --- */
+        #checkout-view {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-color); z-index: 110; display: none;
+            flex-direction: column; align-items: center; justify-content: center;
+            padding: 80px 24px 24px;
+            text-align: center; animation: fadeIn 1s ease forwards;
+        }
+        .result-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 40px 24px;
+            width: 100%;
+            max-width: 380px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .res-title {
+            font-size: 22px; font-weight: 800; color: var(--color-text-strong);
+            margin-bottom: 16px; text-align: center; line-height: 1.3;
+        }
+        .res-warning {
+            font-size: 24px; font-weight: 800; color: var(--red);
+            display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 30px;
+        }
+        .circle-wrap {
+            width: 160px; height: 160px; position: relative; margin-bottom: 30px;
+        }
+        .circle-svg {
+            width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible;
+        }
+        .circle-bg {
+            fill: none; stroke: var(--border); stroke-width: 8;
+        }
+        .circle-progress {
+            fill: none; stroke: var(--red); stroke-width: 8; stroke-linecap: round;
+            stroke-dasharray: 251.2; stroke-dashoffset: 251.2; 
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .circle-text-container {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            display: flex; flex-direction: column; align-items: center;
+        }
+        .circle-score {
+            font-size: 48px; font-weight: 800; color: var(--color-text-strong); line-height: 1;
+        }
+        .circle-sub {
+            font-size: 12px; color: var(--text-sub); margin-top: 8px; font-weight: 500;
+        }
+        .res-desc {
+            font-size: 15px; line-height: 1.6; color: var(--color-text-strong);
+            text-align: left;
+        }
+        [dir="rtl"] .res-desc { text-align: right; }
+    </style>
+</head>
+<body>
+
+<header class="app-header">
+    <div class="app-header-inner">
+        <div class="app-header-content">
+            <a href="/" class="app-header-brand">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="app-logo-icon" aria-hidden="true">
+                    <path d="M11 14h2a2 2 0 0 0 0-4h-3c-.6 0-1.1.2-1.4.6L3 16"></path>
+                    <path d="m14.45 13.39 5.05-4.694C20.196 8 21 6.85 21 5.75a2.75 2.75 0 0 0-4.797-1.837.276.276 0 0 1-.406 0A2.75 2.75 0 0 0 11 5.75c0 1.2.802 2.248 1.5 2.946L16 11.95"></path>
+                    <path d="m2 15 6 6"></path>
+                    <path d="m7 20 1.6-1.4c.3-.4.8-.6 1.4-.6h4c1.1 0 2.1-.4 2.8-1.2l4.6-4.4a1 1 0 0 0-2.75-2.91"></path>
+                </svg>
+                <span class="app-title">DepressedMe</span>
+            </a>
+        </div>
+        <div class="app-header-progress-track">
+            <div class="app-header-progress-fill" id="header-progress-fill" style="width: 100%;"></div>
+        </div>
+    </div>
+</header>
+
+<div id="app">
+    <!-- BATTERY PROGRESS -->
+    <div id="battery-container">
+        <div class="battery-wrapper">
+            <div class="battery-text" id="battery-text">100%</div>
+            <div class="battery-icon">
+                <div class="battery-fill" id="battery-fill"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- QUESTIONS AREA -->
+    <div id="question-container"></div>
+
+    <!-- CINEMATIC LOADING SCREEN -->
+    <div id="cinematic-loader">
+        <div class="orb-container">
+            <div class="glow-ring"></div>
+            <div class="glow-ring-inner"></div>
+            <div class="loader-perc" id="loader-perc">0%</div>
+        </div>
+        <div class="loader-status" id="loader-status">Initialisiere Analyse...</div>
+        <div class="data-stream" id="data-stream"></div>
+    </div>
+
+    <!-- CHECKOUT VIEW (RESULT VIEW) -->
+    <div id="checkout-view">
+        <div class="result-card">
+            <div class="res-title" id="res-title-text">Ergebnis des Depressionstests</div>
+            <div class="res-warning" id="res-warning">⚠️ Schwere Depression</div>
+            
+            <div class="circle-wrap">
+                <svg viewBox="0 0 100 100" class="circle-svg">
+                    <circle class="circle-bg" cx="50" cy="50" r="40"></circle>
+                    <circle class="circle-progress" cx="50" cy="50" r="40"></circle>
+                </svg>
+                <div class="circle-text-container">
+                    <div class="circle-score" id="res-score-num">0</div>
+                    <div class="circle-sub" id="res-score-sub">89 von 100 Punkten</div>
+                </div>
+            </div>
+            
+            <div class="res-desc" id="res-desc">
+                Ihre Antworten deuten auf eine schwere Depression hin. Basierend auf Ihren Antworten scheinen diese Symptome Ihre Beziehungen und Ihre Fähigkeit, den Alltag zu bewältigen, erheblich zu beeinträchtigen.
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ----------------------------------------------------
+    // TRANSLATIONS DICTIONARY
+    // ----------------------------------------------------
+    const i18n = {
+        en: {
+            img: "Loading image...", sn: "Never", sm: "Sometimes", so: "Often", si: "Always",
+            q1p: "How often do you manage to look forward to the day in the morning?", q1t: "How often do you manage to look forward to the day in the morning?",
+            q3p: "68% of 18–30 year olds regularly feel exhausted.", q3t: "Where are you currently on this scale?", q3pos: "Positive", q3dep: "Depressed",
+            q5p: "How often does this happen to you?", q5s: "You are sitting in a group of people — friends, classmates, colleagues. Everyone is laughing. You too. But inside, you are somehow... somewhere else.", q5t: "How often does this happen to you?",
+            q6p: "People with similar answers often receive sick leave due to burnout.", q6t: "Which detail in the picture best describes your state? (Place a marker)",
+            q10pl: "Have you ever thought about seeking professional help — and then didn't do it after all?", q10sm: "Last question", q10t: "Have you ever thought about seeking professional help — and then didn't do it after all?",
+            bnxt: "Continue", bconf: "Confirm",
+            l_init: "Initializing analysis...", l_p1: "Loading answer pattern...", l_p2: "Analyzing indicators...", l_p3: "Calculating exhaustion level...", l_p4: "Creating personal profile...", l_done: "Evaluation complete",
+            r_title: "Depression Test Results", r_warn: "Severe Depression", r_score_sub: "89 out of 100 points", r_desc: "Your answers suggest severe depression. Based on your answers, these symptoms seem to be significantly impacting your relationships and ability to live daily life.",
+            na: "Not answered"
+        },
+        fr: {
+            img: "Chargement de l'image...", sn: "Jamais", sm: "Parfois", so: "Souvent", si: "Toujours",
+            q1p: "À quelle fréquence parvenez-vous à vous réjouir de la journée le matin ?", q1t: "À quelle fréquence parvenez-vous à vous réjouir de la journée le matin ?",
+            q3p: "68 % des 18–30 ans se sentent régulièrement épuisés.", q3t: "Où vous situez-vous sur cette échelle ?", q3pos: "Positif", q3dep: "Dépressif",
+            q5p: "À quelle fréquence cela vous arrive-t-il ?", q5s: "Vous êtes dans un groupe — amis, camarades, collègues. Tout le monde rit. Vous aussi. Mais intérieurement, vous êtes ailleurs.", q5t: "À quelle fréquence cela vous arrive-t-il ?",
+            q6p: "Les personnes ayant des réponses similaires reçoivent souvent un arrêt maladie pour burn-out.", q6t: "Quel détail de l'image décrit le mieux votre état ? (Placez un repère)",
+            q10pl: "Avez-vous déjà pensé à chercher de l'aide professionnelle — sans le faire ?", q10sm: "Dernière question", q10t: "Avez-vous déjà pensé à chercher une aide professionnelle — et ne l'avez finalement pas fait ?",
+            bnxt: "Continuer", bconf: "Confirmer",
+            l_init: "Initialisation...", l_p1: "Chargement des réponses...", l_p2: "Analyse des indicateurs...", l_p3: "Calcul de l'épuisement...", l_p4: "Création du profil...", l_done: "Évaluation terminée",
+            r_title: "Résultats du test de dépression", r_warn: "Dépression sévère", r_score_sub: "89 points sur 100", r_desc: "Vos réponses suggèrent une dépression sévère. D'après vos réponses, ces symptômes semblent avoir un impact significatif sur vos relations et votre capacité à vivre au quotidien.",
+            na: "Non répondu"
+        },
+        sk: {
+            img: "Načítava sa obrázok...", sn: "Nikdy", sm: "Niekedy", so: "Často", si: "Vždy",
+            q1p: "Ako často sa ráno dokážeš tešiť na deň?", q1t: "Ako často sa ráno dokážeš tešiť na deň?",
+            q3p: "68 % ľudí vo veku 18–30 rokov sa pravidelne cíti vyčerpane.", q3t: "Kde sa momentálne nachádzaš na tejto stupnici?", q3pos: "Pozitívne", q3dep: "Depresívne",
+            q5p: "Ako často sa ti to stáva?", q5s: "Sedíš v skupine ľudí — priatelia, spolužiaci, kolegovia. Všetci sa smejú. Ty tiež. Ale vnútorne si akosi... inde.", q5t: "Ako často sa ti to stáva?",
+            q6p: "Ľudia s podobnými odpoveďami často dostávajú práceneschopnosť kvôli vyhoreniu.", q6t: "Ktorý detail na obrázku najlepšie opisuje tvoj stav? (Umiestni značku)",
+            q10pl: "Premýšľal si niekedy o vyhľadaní odbornej pomoci — a nakoniec si to neurobil?", q10sm: "Posledná otázka", q10t: "Premýšľal si niekedy o vyhľadaní odbornej pomoci — a nakoniec si to neurobil?",
+            bnxt: "Pokračovať", bconf: "Potvrdiť",
+            l_init: "Spúšťam analýzu...", l_p1: "Načítavam vzorec odpovedí...", l_p2: "Analyzujem indikátory...", l_p3: "Počítam mieru vyčerpania...", l_p4: "Vytváram osobný profil...", l_done: "Vyhodnotenie dokončené",
+            r_title: "Výsledky testu na depresiu", r_warn: "Ťažká depresia", r_score_sub: "89 zo 100 bodov", r_desc: "Vaše odpovede naznačujú ťažkú depresiu. Na základe vašich odpovedí sa zdá, že tieto príznaky výrazne ovplyvňujú vaše vzťahy a schopnosť žiť každodenný život.",
+            na: "Neodpovedané"
+        },
+        pl: {
+            img: "Ładowanie obrazu...", sn: "Nigdy", sm: "Czasami", so: "Często", si: "Zawsze",
+            q1p: "Jak często rano udaje Ci się cieszyć na nadchodzący dzień?", q1t: "Jak często rano udaje Ci się cieszyć na nadchodzący dzień?",
+            q3p: "68% osób w wieku 18–30 lat regularnie czuje się wyczerpanych.", q3t: "Gdzie obecnie znajdujesz się na tej skali?", q3pos: "Pozytywnie", q3dep: "Depresyjnie",
+            q5p: "Jak często Ci się to zdarza?", q5s: "Siedzisz w grupie ludzi — przyjaciele, koledzy z pracy. Wszyscy się śmieją. Ty też. Ale wewnętrznie jesteś jakoś... gdzie indziej.", q5t: "Jak często Ci się to zdarza?",
+            q6p: "Osoby o podobnych odpowiedziach często otrzymują zwolnienie lekarskie z powodu wypalenia.", q6t: "Który szczegół na zdjęciu najlepiej opisuje Twój stan? (Postaw znacznik)",
+            q10pl: "Czy kiedykolwiek myślałeś o szukaniu profesjonalnej pomocy — a potem jednak tego nie zrobiłeś?", q10sm: "Ostatnie pytanie", q10t: "Czy kiedykolwiek myślałeś o szukaniu profesjonalnej pomocy — a potem jednak tego nie zrobiłeś?",
+            bnxt: "Dalej", bconf: "Potwierdź",
+            l_init: "Inicjowanie analizy...", l_p1: "Ładowanie wzorca odpowiedzi...", l_p2: "Analiza wskaźników...", l_p3: "Obliczanie poziomu wyczerpania...", l_p4: "Tworzenie profilu osobistego...", l_done: "Analiza zakończona",
+            r_title: "Wyniki testu na depresję", r_warn: "Ciężka depresja", r_score_sub: "89 na 100 punktów", r_desc: "Twoje odpowiedzi sugerują ciężką depresję. Na podstawie Twoich odpowiedzi objawy te wydają się znacząco wpływać na Twoje relacje i zdolność do codziennego funkcjonowania.",
+            na: "Brak odpowiedzi"
+        },
+        nl: {
+            img: "Afbeelding laden...", sn: "Nooit", sm: "Soms", so: "Vaak", si: "Altijd",
+            q1p: "Hoe vaak lukt het je 's ochtends om uit te kijken naar de dag?", q1t: "Hoe vaak lukt het je 's ochtends om uit te kijken naar de dag?",
+            q3p: "68% van de 18-30-jarigen voelt zich regelmatig uitgeput.", q3t: "Waar bevind je je momenteel op deze schaal?", q3pos: "Positief", q3dep: "Depressief",
+            q5p: "Hoe vaak overkomt je dit?", q5s: "Je zit in een groep mensen — vrienden, collega's. Iedereen lacht. Jij ook. Maar van binnen ben je ergens... anders.", q5t: "Hoe vaak overkomt je dit?",
+            q6p: "Personen met vergelijkbare antwoorden krijgen vaak ziekteverlof wegens burn-out.", q6t: "Welk detail in de afbeelding beschrijft jouw toestand het best? (Plaats een markering)",
+            q10pl: "Heb je er ooit aan gedacht om professionele hulp te zoeken — en het toen toch niet gedaan?", q10sm: "Laatste vraag", q10t: "Heb je er ooit aan gedacht om professionele hulp te zoeken — en het toen toch niet gedaan?",
+            bnxt: "Verder", bconf: "Bevestigen",
+            l_init: "Analyse initialiseren...", l_p1: "Antwoordpatroon laden...", l_p2: "Indicatoren analyseren...", l_p3: "Uitputtingsniveau berekenen...", l_p4: "Persoonlijk profiel aanmaken...", l_done: "Evaluatie voltooid",
+            r_title: "Resultaten van de depressietest", r_warn: "Ernstige depressie", r_score_sub: "89 van de 100 punten", r_desc: "Je antwoorden wijzen op een ernstige depressie. Op basis van je antwoorden lijken deze symptomen een aanzienlijke impact te hebben op je relaties en je vermogen om het dagelijks leven te leiden.",
+            na: "Niet beantwoord"
+        },
+        es: {
+            img: "Cargando imagen...", sn: "Nunca", sm: "A veces", so: "A menudo", si: "Siempre",
+            q1p: "¿Con qué frecuencia logras alegrarte por el día al despertar?", q1t: "¿Con qué frecuencia logras alegrarte por el día al despertar?",
+            q3p: "El 68% de los jóvenes de 18 a 30 años se siente agotado regularmente.", q3t: "¿Dónde te encuentras en esta escala en este momento?", q3pos: "Positivo", q3dep: "Depresivo",
+            q5p: "¿Con qué frecuencia te pasa esto?", q5s: "Estás en un grupo de personas — amigos, compañeros, colegas. Todos se ríen. Tú también. Pero por dentro estás... en otro lugar.", q5t: "¿Con qué frecuencia te pasa esto?",
+            q6p: "Las personas con respuestas similares a menudo reciben una baja laboral por burnout.", q6t: "¿Qué detalle de la imagen describe mejor tu estado? (Coloca una marca)",
+            q10pl: "¿Alguna vez has pensado en buscar ayuda profesional — y luego no lo hiciste?", q10sm: "Última pregunta", q10t: "¿Alguna vez has pensado en buscar ayuda profesional — y luego no lo hiciste?",
+            bnxt: "Continuar", bconf: "Confirmar",
+            l_init: "Inicializando análisis...", l_p1: "Cargando respuestas...", l_p2: "Analizando indicadores...", l_p3: "Calculando agotamiento...", l_p4: "Creando perfil personal...", l_done: "Evaluación completada",
+            r_title: "Resultados del test de depresión", r_warn: "Depresión severa", r_score_sub: "89 de 100 puntos", r_desc: "Tus respuestas sugieren una depresión severa. Según tus respuestas, estos síntomas parecen estar afectando significativamente tus relaciones y tu capacidad para llevar tu vida diaria.",
+            na: "Sin respuesta"
+        },
+        he: {
+            img: "טוען תמונה...", sn: "אף פעם", sm: "לפעמים", so: "לעתים קרובות", si: "תמיד",
+            q1p: "באיזו תדירות אתה מצליח לקום בבוקר ולצפות ליום שיבוא?", q1t: "באיזו תדירות אתה מצליח לקום בבוקר ולצפות ליום שיבוא?",
+            q3p: "68% מבני 18-30 מרגישים תשושים באופן קבוע.", q3t: "איפה אתה נמצא כרגע על הסקאלה הזו?", q3pos: "חיובי", q3dep: "דיכאוני",
+            q5p: "באיזו תדירות זה קורה לך?", q5s: "אתה יושב בקבוצה של אנשים - חברים, קולגות. כולם צוחקים. גם אתה. אבל בפנים אתה איכשהו... במקום אחר.", q5t: "באיזו תדירות זה קורה לך?",
+            q6p: "אנשים עם תשובות דומות מקבלים לעתים קרובות חופשת מחלה עקב שחיקה.", q6t: "איזה פרט בתמונה מתאר בצורה הטובה ביותר את מצבך? (שים סימן)",
+            q10pl: "האם אי פעם חשבת לחפש עזרה מקצועית - ובסוף לא עשית את זה?", q10sm: "שאלה אחרונה", q10t: "האם אי פעם חשבת לחפש עזרה מקצועית - ובסוף לא עשית את זה?",
+            bnxt: "המשך", bconf: "אשר",
+            l_init: "מאתחל ניתוח...", l_p1: "טוען דפוס תשובות...", l_p2: "מנתח אינדיקטורים...", l_p3: "מחשב רמת תשישות...", l_p4: "יוצר פרופיל אישי...", l_done: "ההערכה הושלמה",
+            r_title: "תוצאות מבחן דיכאון", r_warn: "דיכאון חמור", r_score_sub: "89 מתוך 100 נקודות", r_desc: "התשובות שלך מצביעות על דיכאון חמור. בהתבסס על התשובות שלך, נראה כי תסמינים אלה משפיעים באופן משמעותי על מערכות היחסים שלך ועל יכולתך לנהל חיי יום-יום.",
+            na: "לא נענה"
+        },
+        ar: {
+            img: "جاري تحميل الصورة...", sn: "أبداً", sm: "أحياناً", so: "غالباً", si: "دائماً",
+            q1p: "كم مرة تستطيع أن تتطلع إلى يومك في الصباح؟", q1t: "كم مرة تستطيع أن تتطلع إلى يومك في الصباح؟",
+            q3p: "68% من الأشخاص الذين تتراوح أعمارهم بين 18 و 30 عاماً يشعرون بالإرهاق بانتظام.", q3t: "أين تجد نفسك على هذا المقياس الآن؟", q3pos: "إيجابي", q3dep: "مكتئب",
+            q5p: "كم مرة يحدث لك هذا؟", q5s: "أنت تجلس في مجموعة من الناس — أصدقاء، زملاء. الجميع يضحك. أنت أيضاً. ولكن من الداخل أنت بطريقة ما... في مكان آخر.", q5t: "كم مرة يحدث لك هذا؟",
+            q6p: "الأشخاص الذين لديهم إجابات مماثلة غالباً ما يحصلون على إجازة مرضية بسبب الإرهاق.", q6t: "أي تفصيل في الصورة يصف حالتك بشكل أفضل؟ (ضع علامة)",
+            q10pl: "هل فكرت يوماً في طلب مساعدة متخصصة — ثم لم تفعل ذلك في النهاية؟", q10sm: "السؤال الأخير", q10t: "هل فكرت يوماً في طلب مساعدة متخصصة — ثم لم تفعل ذلك في النهاية؟",
+            bnxt: "التالي", bconf: "تأكيد",
+            l_init: "بدء التحليل...", l_p1: "تحميل نمط الإجابة...", l_p2: "تحليل المؤشرات...", l_p3: "حساب مستوى الإرهاق...", l_p4: "إنشاء الملف الشخصي...", l_done: "اكتمل التقييم",
+            r_title: "نتائج اختبار الاكتئاب", r_warn: "اكتئاب حاد", r_score_sub: "89 من أصل 100 نقطة", r_desc: "تشير إجاباتك إلى اكتئاب حاد. بناءً على إجاباتك، يبدو أن هذه الأعراض تؤثر بشكل كبير على علاقاتك وقدرتك على عيش حياتك اليومية.",
+            na: "لم يتم الرد"
+        },
+        ja: {
+            img: "画像を読み込んでいます...", sn: "全くない", sm: "時々", so: "よくある", si: "いつも",
+            q1p: "朝、その日一日に期待を持つことがどのくらいありますか？", q1t: "朝、その日一日に期待を持つことがどのくらいありますか？",
+            q3p: "18〜30歳の68%が定期的に疲労を感じています。", q3t: "現在、このスケールでどの位置にいますか？", q3pos: "ポジティブ", q3dep: "憂鬱",
+            q5p: "このようなことがどのくらい起きますか？", q5s: "友人の集まりにいます。みんな笑っています。あなたも笑っています。しかし内心、あなたはどこか...別の場所にいます。", q5t: "このようなことがどのくらい起きますか？",
+            q6p: "似たような回答をした人は、燃え尽き症候群で休職することがよくあります。", q6t: "画像のどの詳細があなたの状態を最もよく表していますか？（マークを配置）",
+            q10pl: "専門家の助けを求めようと考えたことはありますか — そして結局そうしなかったことは？", q10sm: "最後の質問", q10t: "専門家の助けを求めようと考えたことはありますか — そして結局そうしなかったことは？",
+            bnxt: "次へ", bconf: "確認",
+            l_init: "分析を初期化中...", l_p1: "回答を読み込み中...", l_p2: "指標を分析中...", l_p3: "疲労度を計算中...", l_p4: "プロフィールを作成中...", l_done: "評価完了",
+            r_title: "うつ病テストの結果", r_warn: "重度のうつ病", r_score_sub: "100点満点中89点", r_desc: "あなたの回答は、重度のうつ病であることを示唆しています。回答に基づくと、これらの症状は、人間関係や日常生活を送る能力に大きな影響を与えているようです。",
+            na: "未回答"
+        },
+        ru: {
+            img: "Загрузка изображения...", sn: "Никогда", sm: "Иногда", so: "Часто", si: "Всегда",
+            q1p: "Как часто тебе удается с утра радоваться предстоящему дню?", q1t: "Как часто тебе удается с утра радоваться предстоящему дню?",
+            q3p: "68% молодых людей в возрасте 18-30 лет регулярно чувствуют себя истощенными.", q3t: "Где ты находишься на этой шкале прямо сейчас?", q3pos: "Позитив", q3dep: "Депрессия",
+            q5p: "Как часто с тобой такое случается?", q5s: "Ты сидишь в группе людей — друзья, сокурсники, коллеги. Все смеются. Ты тоже. Но внутренне ты как будто... в другом месте.", q5t: "Как часто с тобой такое случается?",
+            q6p: "Люди с похожими ответами часто получают больничный из-за выгорания.", q6t: "Какая деталь на картинке лучше всего описывает твое состояние? (Поставь метку)",
+            q10pl: "Думал ли ты когда-нибудь обратиться за профессиональной помощью — но так и не сделал этого?", q10sm: "Последний вопрос", q10t: "Думал ли ты когда-нибудь обратиться за профессиональной помощью — но так и не сделал этого?",
+            bnxt: "Далее", bconf: "Подтвердить",
+            l_init: "Инициализация анализа...", l_p1: "Загрузка шаблона ответов...", l_p2: "Анализ индикаторов...", l_p3: "Расчет уровня истощения...", l_p4: "Создание личного профиля...", l_done: "Оценка завершена",
+            r_title: "Результаты теста на депрессию", r_warn: "Тяжелая депрессия", r_score_sub: "89 из 100 баллов", r_desc: "Ваши ответы указывают на тяжелую депрессию. Судя по вашим ответам, эти симптомы существенно влияют на ваши отношения и способность вести повседневную жизнь.",
+            na: "Нет ответа"
+        },
+        uk: {
+            img: "Завантаження зображення...", sn: "Ніколи", sm: "Іноді", so: "Часто", si: "Завжди",
+            q1p: "Як часто тобі вдається зранку радіти майбутньому дню?", q1t: "Як часто тобі вдається зранку радіти майбутньому дню?",
+            q3p: "68% молодих людей у віці 18-30 років регулярно відчувають себе виснаженими.", q3t: "Де ти знаходишся на цій шкалі прямо зараз?", q3pos: "Позитив", q3dep: "Депресія",
+            q5p: "Як часто з тобою таке трапляється?", q5s: "Ти сидиш у групі людей — друзі, однокурсники, колеги. Всі сміються. Ти теж. Але внутрішньо ти ніби... в іншому місці.", q5t: "Як часто з тобою таке трапляється?",
+            q6p: "Люди зі схожими відповідями часто отримують лікарняний через вигорання.", q6t: "Яка деталь на картинці найкраще описує твій стан? (Постав мітку)",
+            q10pl: "Чи думав ти коли-небудь звернутися по професійну допомогу — але так і не зробив цього?", q10sm: "Останнє запитання", q10t: "Чи думав ти коли-небудь звернутися по професійну допомогу — але так і не зробив цього?",
+            bnxt: "Далі", bconf: "Підтвердити",
+            l_init: "Ініціалізація аналізу...", l_p1: "Завантаження шаблону відповідей...", l_p2: "Аналіз індикаторів...", l_p3: "Розрахунок рівня виснаження...", l_p4: "Створення особистого профілю...", l_done: "Оцінка завершена",
+            r_title: "Результати тесту на депресію", r_warn: "Важка депресія", r_score_sub: "89 зі 100 балів", r_desc: "Ваші відповіді вказують на важку депресію. Судячи з ваших відповідей, ці симптоми суттєво впливають на ваші стосунки та здатність вести повсякденне життя.",
+            na: "Немає відповіді"
+        }
+    };
+
+    // APPLY TRANSLATIONS DYNAMICALLY
+    function applyTranslations() {
+        // Улучшенное чтение параметра lang из URL (поддерживает ?lang= и #?lang=)
+        let langParam = null;
+        const searchParams = new URLSearchParams(window.location.search);
+        langParam = searchParams.get('lang') || searchParams.get('languageCode');
+        
+        if (!langParam && window.location.hash.includes('?')) {
+            const hashParams = new URLSearchParams(window.location.hash.split('?')[1]);
+            langParam = hashParams.get('lang') || hashParams.get('languageCode');
+        }
+
+        let lang = (langParam || navigator.language.slice(0, 2)).toLowerCase();
+        
+        // Map common country codes to language codes if provided
+        const langMap = { 'il': 'he', 'sa': 'ar', 'jp': 'ja', 'ua': 'uk' };
+        if (langMap[lang]) lang = langMap[lang];
+
+        // Ensure DE skips applying translations since the base HTML is DE
+        if (lang === 'de') {
+            document.documentElement.lang = 'de';
+            document.documentElement.setAttribute('dir', 'ltr');
+            // Apply default image placeholder translation for DE
+            document.querySelectorAll('.img-placeholder').forEach(el => el.setAttribute('data-loading-text', "Bild wird geladen..."));
+            return; 
+        }
+
+        // If language not found in dictionary, fallback to English
+        if (!i18n[lang]) lang = 'en'; 
+        const t = i18n[lang];
+
+        // Устанавливаем язык для документа
+        document.documentElement.lang = lang;
+
+        // RTL Support
+        if (lang === 'he' || lang === 'ar') {
+            document.documentElement.setAttribute('dir', 'rtl');
+            const style = document.createElement('style');
+            style.innerHTML = `.slider-labels { flex-direction: row-reverse; } .custom-slider { direction: ltr; }`;
+            document.head.appendChild(style);
+        } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+        }
+
+        // Apply translated placeholder texts
+        document.querySelectorAll('.img-placeholder').forEach(el => el.setAttribute('data-loading-text', t.img));
+
+        // Create runtime smileys block for this language
+        const runtimeSmileys = `
+            <div class="smileys-grid">
+                <div class="smiley-card" onclick="selectAnswer(this, '${t.sn}')">
+                    <div class="smiley-icon">😊</div>
+                    <div class="smiley-label">${t.sn}</div>
+                </div>
+                <div class="smiley-card" onclick="selectAnswer(this, '${t.sm}')">
+                    <div class="smiley-icon">😐</div>
+                    <div class="smiley-label">${t.sm}</div>
+                </div>
+                <div class="smiley-card" onclick="selectAnswer(this, '${t.so}')">
+                    <div class="smiley-icon">😔</div>
+                    <div class="smiley-label">${t.so}</div>
+                </div>
+                <div class="smiley-card" onclick="selectAnswer(this, '${t.si}')">
+                    <div class="smiley-icon">😞</div>
+                    <div class="smiley-label">${t.si}</div>
+                </div>
+            </div>
+        `;
+
+        // Override questions array with translations
+        questions[0].payloadText = t.q1p;
+        questions[0].html = `<div class="q-title">${t.q1t}</div>${runtimeSmileys}`;
+
+        questions[1].popup = t.q3p;
+        questions[1].html = `
+            <div class="q-title">${t.q3t}</div>
+            <div class="slider-container">
+                <div class="transition-img-container img-placeholder" data-loading-text="${t.img}">
+                    <img src="https://i.ibb.co/fYSGmLmL/people-to-depression.avif" class="q3-image img-loading" id="q3-img" alt="Zustand Bild" onload="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');" onerror="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');">
+                </div>
+                <div class="slider-wrapper">
+                    <input type="range" min="0" max="100" value="50" class="custom-slider" id="q3-slider" oninput="updateSlider(this)">
+                    <div class="slider-labels" dir="ltr">
+                        <span>${t.q3pos}</span>
+                        <span>${t.q3dep}</span>
+                    </div>
+                </div>
+                <button class="next-btn" onclick="nextQuestion()">${t.bnxt}</button>
+            </div>
+        `;
+
+        questions[2].payloadText = t.q5p;
+        questions[2].html = `<div class="scene-text">${t.q5s}</div><div class="q-subtitle">${t.q5t}</div>${runtimeSmileys}`;
+
+        questions[3].popup = t.q6p;
+        questions[3].html = `
+            <div class="q-title">${t.q6t}</div>
+            <div class="image-map-container img-placeholder" data-loading-text="${t.img}" onclick="placeMarker(event, this)">
+                <img src="https://i.ibb.co/GfRxgTSb/foxes.avif" class="q6-image img-loading" alt="Zustand Bild" onload="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');" onerror="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');">
+                <div class="marker" id="q6-marker"></div>
+            </div>
+            <button class="next-btn" id="q6-btn" onclick="nextQuestion()" style="width: 100%;">${t.bconf}</button>
+        `;
+
+        questions[4].payloadText = t.q10pl;
+        questions[4].html = `<div class="small-subtitle delay-fade">${t.q10sm}</div><div class="q-title delay-fade">${t.q10t}</div><div class="delay-fade">${runtimeSmileys}</div>`;
+
+        // Translate UI
+        document.getElementById('loader-status').textContent = t.l_init;
+        document.getElementById('res-title-text').textContent = t.r_title;
+        document.getElementById('res-warning').innerHTML = `⚠️ ${t.r_warn}`;
+        document.getElementById('res-score-sub').textContent = t.r_score_sub;
+        document.getElementById('res-desc').textContent = t.r_desc;
+
+        // Save overrides for loading screen/data processing
+        window.loadingPhases = [t.l_p1, t.l_p2, t.l_p3, t.l_p4];
+        window.loadingDone = t.l_done;
+        window.notAnsweredText = t.na;
+    }
+
+    // PRELOAD IMAGES IN BACKGROUND (NON-BLOCKING)
+    function preloadImages() {
+        const imageUrls = [
+            "https://i.ibb.co/fYSGmLmL/people-to-depression.avif",
+            "https://i.ibb.co/GfRxgTSb/foxes.avif"
+        ];
+        imageUrls.forEach(url => {
+            const img = new Image();
+            img.src = url;
+        });
+    }
+    
+    // Globals
+    let currentIndex = 0;
+    const testState = { answers: {} };
+    
+    // RULE 2: answers array MUST exist in the global scope
+    var answers = { verbalAnswers: [] };
+
+    // Standard Smileys Template (KEPT STATIC FOR CONVERTER COMPLIANCE)
+    const smileysHtml = `
+        <div class="smileys-grid">
+            <div class="smiley-card" onclick="selectAnswer(this, 'Nie')">
+                <div class="smiley-icon">😊</div>
+                <div class="smiley-label">Nie</div>
+            </div>
+            <div class="smiley-card" onclick="selectAnswer(this, 'Manchmal')">
+                <div class="smiley-icon">😐</div>
+                <div class="smiley-label">Manchmal</div>
+            </div>
+            <div class="smiley-card" onclick="selectAnswer(this, 'Oft')">
+                <div class="smiley-icon">😔</div>
+                <div class="smiley-label">Oft</div>
+            </div>
+            <div class="smiley-card" onclick="selectAnswer(this, 'Immer')">
+                <div class="smiley-icon">😞</div>
+                <div class="smiley-label">Immer</div>
+            </div>
+        </div>
+    `;
+
+    // Questions Data (Strictly keeping Q1, Q3, Q5, Q6 and Q10 logic)
+    const questions = [
+        {   // Q1
+            payloadText: "Wie oft schaffst du es morgens, dich auf den Tag zu freuen?",
+            html: `
+                <div class="q-title">Wie oft schaffst du es morgens, dich auf den Tag zu freuen?</div>
+                ${smileysHtml}
+            `
+        },
+        {   // Q3 - Slider (Index 1)
+            html: `
+                <div class="q-title">Wo befindest du dich gerade auf dieser Skala?</div>
+                <div class="slider-container">
+                    <div class="transition-img-container img-placeholder" data-loading-text="Bild wird geladen...">
+                        <img src="https://i.ibb.co/fYSGmLmL/people-to-depression.avif" class="q3-image img-loading" id="q3-img" alt="Zustand Bild" onload="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');" onerror="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');">
+                    </div>
+                    <div class="slider-wrapper">
+                        <input type="range" min="0" max="100" value="50" class="custom-slider" id="q3-slider" oninput="updateSlider(this)">
+                        <div class="slider-labels" dir="ltr">
+                            <span>Positiv</span>
+                            <span>Depressiv</span>
+                        </div>
+                    </div>
+                    <button class="next-btn" onclick="nextQuestion()">Weiter</button>
+                </div>
+            `
+        },
+        {   // Q5 (Index 2)
+            payloadText: "Wie oft fühlst du dich innerlich abwesend, obwohl du in einer Gruppe bist?",
+            html: `
+                <div class="scene-text">Du sitzt in einer Gruppe von Menschen — Freunde, Kommilitonen, Kollegen. Alle lachen. Du auch. Aber innerlich bist du irgendwie... woanders.</div>
+                <div class="q-subtitle">Wie oft passiert dir das?</div>
+                ${smileysHtml}
+            `
+        },
+        {   // Q6 - Imagemap (Index 3)
+            html: `
+                <div class="q-title">Welches Detail im Bild beschreibt deinen Zustand am besten? (Setze eine Markierung)</div>
+                <div class="image-map-container img-placeholder" data-loading-text="Bild wird geladen..." onclick="placeMarker(event, this)">
+                    <img src="https://i.ibb.co/GfRxgTSb/foxes.avif" class="q6-image img-loading" alt="Zustand Bild" onload="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');" onerror="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');">
+                    <div class="marker" id="q6-marker"></div>
+                </div>
+                <button class="next-btn" id="q6-btn" onclick="nextQuestion()" style="width: 100%;">Bestätigen</button>
+            `
+        },
+        {   // Q10 - Last (Index 4)
+            quiet: true,
+            isLast: true,
+            payloadText: "Hast du jemals daran gedacht, dir professionelle Hilfe zu suchen — und es dann doch nicht getan?",
+            html: `
+                <div class="small-subtitle delay-fade">Letzte Frage</div>
+                <div class="q-title delay-fade">Hast du jemals daran gedacht, dir professionelle Hilfe zu suchen — und es dann doch nicht getan?</div>
+                <div class="delay-fade">${smileysHtml}</div>
+            `
+        }
+    ];
+
+    // Initialization
+    window.onload = () => {
+        applyTranslations(); // Setup multi-language UI before render
+        preloadImages();
+        renderQuestion(0);
+        updateBattery(0);
+    };
+
+    // Answer Handlers
+    function selectAnswer(element, value) {
+        const parent = element.parentElement;
+        const siblings = parent.children;
+        
+        for(let s of siblings) {
+            s.classList.remove('selected');
+            s.classList.add('dimmed');
+        }
+        element.classList.remove('dimmed');
+        element.classList.add('selected');
+
+        testState.answers['q' + (currentIndex + 1)] = value;
+
+        setTimeout(() => {
+            nextQuestion();
+        }, 400);
+    }
+
+    function placeMarker(e, container) {
+        const rect = container.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        const marker = document.getElementById('q6-marker');
+        
+        marker.style.left = x + 'px';
+        marker.style.top = y + 'px';
+        marker.style.display = 'block';
+
+        const btn = document.getElementById('q6-btn');
+        if(btn) btn.classList.add('active');
+
+        testState.answers['q' + (currentIndex + 1)] = { x: Math.round(x), y: Math.round(y) };
+    }
+
+    function updateSlider(el) {
+        const val = parseInt(el.value);
+        
+        let r, g, b;
+        if (val <= 50) {
+            const p = val / 50;
+            r = Math.round(74 + (250 - 74) * p);
+            g = Math.round(222 + (204 - 222) * p);
+            b = Math.round(128 + (21 - 128) * p);
+        } else {
+            const p = (val - 50) / 50;
+            r = Math.round(250 + (255 - 250) * p);
+            g = Math.round(204 + (107 - 204) * p);
+            b = Math.round(21 + (107 - 21) * p);
+        }
+        
+        const color = `rgb(${r},${g},${b})`;
+
+        el.style.background = `linear-gradient(to right, ${color} ${val}%, var(--border) ${val}%)`;
+        el.style.setProperty('--thumb-color', color);
+        
+        const img = document.getElementById('q3-img');
+        if (img) {
+            img.style.filter = `grayscale(${val}%) brightness(${100 - (val * 0.4)}%)`;
+        }
+
+        const btn = document.querySelector('.next-btn');
+        if(btn) btn.classList.add('active');
+
+        testState.answers['q' + (currentIndex + 1)] = val;
+    }
+
+    // RULE 1: submitToBackend MUST be a top-level placeholder
+    function submitToBackend() {
+        // placeholder — replaced at build time
+        console.log("dev: would send to backend", answers);
+    }
+
+    // Navigation Logic
+    function nextQuestion() {
+        const currentQ = questions[currentIndex];
+
+        if(currentQ.isLast) {
+            // BUILD ANSWERS JUST BEFORE ANIMATION STARTS
+            answers.verbalAnswers = [];
+            questions.forEach((q, idx) => {
+                const qNum = idx + 1;
+                // Index 1 (Slider) and Index 3 (Imagemap) are image questions
+                if (qNum === 2 || qNum === 4) return; 
+
+                let finalAnswer = testState.answers['q' + qNum] || (window.notAnsweredText || "Nicht beantwortet");
+                answers.verbalAnswers.push({
+                    question: q.payloadText,
+                    answer: finalAnswer
+                });
+            });
+
+            startLoadingScreen();
+            return;
+        }
+
+        currentIndex++;
+        updateBattery(currentIndex);
+        renderQuestion(currentIndex);
+    }
+
+    function renderQuestion(index) {
+        const qContainer = document.getElementById('question-container');
+        const qData = questions[index];
+
+        if (qData.quiet) {
+            document.body.classList.add('quiet-mode');
+            document.body.style.backgroundColor = 'var(--bg-quiet)';
+        }
+
+        const slide = document.createElement('div');
+        slide.className = 'question-slide';
+        slide.innerHTML = qData.html;
+
+        const oldSlide = qContainer.querySelector('.question-slide.active');
+        if (oldSlide) {
+            oldSlide.classList.remove('active');
+            oldSlide.classList.add('prev');
+            setTimeout(() => oldSlide.remove(), 400);
+        }
+
+        qContainer.appendChild(slide);
+        void slide.offsetWidth;
+
+        if(qData.quiet) slide.style.transitionDuration = '0.6s';
+        slide.classList.add('active');
+    }
+
+    // Battery Logic for 5 Questions
+    function updateBattery(index) {
+        const mappings = [
+            {p: 100, c: 'var(--green)'}, // Q1
+            {p: 80, c: 'var(--green)'},  // Q2
+            {p: 60, c: 'var(--yellow)'}, // Q3
+            {p: 40, c: 'var(--yellow)'}, // Q4
+            {p: 20, c: 'var(--red)'}     // Q5
+        ];
+
+        const cfg = mappings[index] || mappings[4];
+        const batteryFill = document.getElementById('battery-fill');
+        const batteryText = document.getElementById('battery-text');
+        
+        batteryFill.style.width = cfg.p + '%';
+        batteryFill.style.backgroundColor = cfg.c;
+        batteryFill.style.boxShadow = `0 0 10px ${cfg.c}`;
+        
+        batteryText.textContent = cfg.p + '%';
+        batteryText.style.color = cfg.c;
+    }
+
+    // Cinematic Loading & Results Sequence
+    function startLoadingScreen() {
+        document.getElementById('question-container').style.display = 'none';
+        document.getElementById('battery-container').style.display = 'none';
+        
+        const loader = document.getElementById('cinematic-loader');
+        loader.style.display = 'flex';
+        void loader.offsetWidth;
+        loader.style.opacity = '1';
+
+        const percEl = document.getElementById('loader-perc');
+        const statusEl = document.getElementById('loader-status');
+        const streamEl = document.getElementById('data-stream');
+        
+        const phases = [
+            {p: 15, text: window.loadingPhases ? window.loadingPhases[0] : "Lade Antwortmuster..."},
+            {p: 35, text: window.loadingPhases ? window.loadingPhases[1] : "Analysiere Indikatoren..."},
+            {p: 60, text: window.loadingPhases ? window.loadingPhases[2] : "Berechne Erschöpfungsgrad..."},
+            {p: 85, text: window.loadingPhases ? window.loadingPhases[3] : "Erstelle persönliches Profil..."}
+        ];
+        
+        let currentPerc = 0;
+        let phaseIdx = 0;
+        
+        const streamInterval = setInterval(() => {
+            const hash = Math.random().toString(36).substring(2, 10).toUpperCase();
+            const hex = Math.floor(Math.random() * 16777215).toString(16).toUpperCase();
+            const line = document.createElement('div');
+            line.textContent = `sys.check_node: [${hash}] -> 0x${hex}`;
+            streamEl.appendChild(line);
+            if(streamEl.children.length > 5) {
+                streamEl.removeChild(streamEl.firstChild);
+            }
+        }, 120);
+
+        const progressInterval = setInterval(() => {
+            currentPerc += 3 + Math.random() * 2; // Faster increments
+            if(currentPerc > 100) currentPerc = 100;
+            
+            percEl.textContent = Math.floor(currentPerc) + '%';
+            
+            if(phaseIdx < phases.length && currentPerc >= phases[phaseIdx].p) {
+                statusEl.textContent = phases[phaseIdx].text;
+                phaseIdx++;
+            }
+
+            if(currentPerc >= 100) {
+                clearInterval(progressInterval);
+                clearInterval(streamInterval);
+                
+                statusEl.textContent = window.loadingDone || "Auswertung abgeschlossen";
+                statusEl.style.animation = 'none';
+                statusEl.style.color = 'var(--green)';
+                
+                const ring = document.querySelector('.glow-ring');
+                ring.style.animation = 'none';
+                ring.style.borderColor = 'var(--green)';
+                ring.style.boxShadow = '0 0 40px rgba(74, 222, 128, 0.3)';
+                document.querySelector('.glow-ring-inner').style.display = 'none';
+                streamEl.style.display = 'none';
+                
+                // --- SHOW RESULTS (AND CALL BACKEND) ---
+                setTimeout(() => {
+                    submitToBackend(); // Called at the exact point requested by converter specs
+                    
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        const checkout = document.getElementById('checkout-view');
+                        if (checkout) {
+                            checkout.style.display = 'flex';
+                            
+                            // Animate circle progress
+                            setTimeout(() => {
+                                const circle = document.querySelector('.circle-progress');
+                                if (circle) {
+                                    // 251.2 is the total circumference for r=40
+                                    // 89% score logic
+                                    circle.style.strokeDashoffset = 251.2 - (251.2 * 0.89);
+                                }
+                                
+                                // Animate Score Numbers
+                                let currentNum = 0;
+                                const numEl = document.getElementById('res-score-num');
+                                const numInterval = setInterval(() => {
+                                    currentNum += 2;
+                                    if(currentNum >= 89) {
+                                        currentNum = 89;
+                                        clearInterval(numInterval);
+                                    }
+                                    if (numEl) numEl.textContent = currentNum;
+                                }, 15); // Faster score animation
+                            }, 50);
+                        }
+                    }, 300); // Faster fade out
+                }, 500); // Shorter pause at 100%
+            }
+        }, 50); 
+    }
+</script>
+
+</body>
+</html>
