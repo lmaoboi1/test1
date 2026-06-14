@@ -227,6 +227,34 @@
             transition: color 0.4s ease;
         }
 
+        /* --- POPUP --- */
+        #notification-popup {
+            position: absolute;
+            top: 115px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-200%);
+            width: calc(100% - 48px);
+            background: var(--popup-bg);
+            border-left: 3px solid var(--accent);
+            border-radius: 8px;
+            padding: 14px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+            z-index: 20;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        #notification-popup.show {
+            transform: translateX(-50%) translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .popup-icon { font-size: 18px; line-height: 1; }
+        .popup-text { font-size: 13px; color: var(--text-main); line-height: 1.4; }
+
         /* --- QUESTION SLIDES --- */
         #question-container {
             flex: 1;
@@ -326,7 +354,7 @@
             100% { background-position: -200% 0; }
         }
 
-        /* --- SLIDER Q2 (was Q3) --- */
+        /* --- SLIDER Q2 --- */
         .slider-container { display: flex; flex-direction: column; gap: 20px; width: 100%; }
         .transition-img-container {
             width: 100%;
@@ -377,7 +405,7 @@
         }
         .next-btn.active { background: var(--accent); border-color: var(--accent); color: var(--color-text-inverse); pointer-events: auto; }
 
-        /* --- GRID Q4 (was Q6) --- */
+        /* --- GRID Q3 --- */
         .image-map-container {
             position: relative;
             width: 100%;
@@ -601,10 +629,8 @@
         en: {
             img: "Loading image...", sn: "Never", sm: "Sometimes", so: "Often", si: "Always",
             q1p: "How often do you manage to look forward to the day in the morning?", q1t: "How often do you manage to look forward to the day in the morning?",
-            q3p: "68% of 18–30 year olds regularly feel exhausted.", q3t: "Where are you currently on this scale?", q3pos: "Positive", q3dep: "Depressed",
-            q5p: "How often does this happen to you?", q5s: "You are sitting in a group of people — friends, classmates, colleagues. Everyone is laughing. You too. But inside, you are somehow... somewhere else.", q5t: "How often does this happen to you?",
-            q6p: "People with similar answers often receive sick leave due to burnout.", q6t: "Which detail in the picture best describes your state? (Place a marker)",
-            q10pl: "Have you ever thought about seeking professional help — and then didn't do it after all?", q10sm: "Last question", q10t: "Have you ever thought about seeking professional help — and then didn't do it after all?",
+            q3t: "Where are you currently on this scale?", q3pos: "Positive", q3dep: "Depressed",
+            q6t: "Which detail in the picture best describes your state? (Place a marker)",
             bnxt: "Continue", bconf: "Confirm",
             l_init: "Initializing analysis...", l_p1: "Loading answer pattern...", l_p2: "Analyzing indicators...", l_p3: "Calculating exhaustion level...", l_p4: "Creating personal profile...", l_done: "Evaluation complete",
             r_title: "Depression Test Results", r_warn: "Severe Depression", r_score_sub: "89 out of 100 points", r_desc: "Your answers suggest severe depression. Based on your answers, these symptoms seem to be significantly impacting your relationships and ability to live daily life.",
@@ -613,10 +639,8 @@
         fr: {
             img: "Chargement de l'image...", sn: "Jamais", sm: "Parfois", so: "Souvent", si: "Toujours",
             q1p: "À quelle fréquence parvenez-vous à vous réjouir de la journée le matin ?", q1t: "À quelle fréquence parvenez-vous à vous réjouir de la journée le matin ?",
-            q3p: "68 % des 18–30 ans se sentent régulièrement épuisés.", q3t: "Où vous situez-vous sur cette échelle ?", q3pos: "Positif", q3dep: "Dépressif",
-            q5p: "À quelle fréquence cela vous arrive-t-il ?", q5s: "Vous êtes dans un groupe — amis, camarades, collègues. Tout le monde rit. Vous aussi. Mais intérieurement, vous êtes ailleurs.", q5t: "À quelle fréquence cela vous arrive-t-il ?",
-            q6p: "Les personnes ayant des réponses similaires reçoivent souvent un arrêt maladie pour burn-out.", q6t: "Quel détail de l'image décrit le mieux votre état ? (Placez un repère)",
-            q10pl: "Avez-vous déjà pensé à chercher de l'aide professionnelle — sans le faire ?", q10sm: "Dernière question", q10t: "Avez-vous déjà pensé à chercher une aide professionnelle — et ne l'avez finalement pas fait ?",
+            q3t: "Où vous situez-vous sur cette échelle ?", q3pos: "Positif", q3dep: "Dépressif",
+            q6t: "Quel détail de l'image décrit le mieux votre état ? (Placez un repère)",
             bnxt: "Continuer", bconf: "Confirmer",
             l_init: "Initialisation...", l_p1: "Chargement des réponses...", l_p2: "Analyse des indicateurs...", l_p3: "Calcul de l'épuisement...", l_p4: "Création du profil...", l_done: "Évaluation terminée",
             r_title: "Résultats du test de dépression", r_warn: "Dépression sévère", r_score_sub: "89 points sur 100", r_desc: "Vos réponses suggèrent une dépression sévère. D'après vos réponses, ces symptômes semblent avoir un impact significatif sur vos relations et votre capacité à vivre au quotidien.",
@@ -625,10 +649,8 @@
         sk: {
             img: "Načítava sa obrázok...", sn: "Nikdy", sm: "Niekedy", so: "Často", si: "Vždy",
             q1p: "Ako často sa ráno dokážeš tešiť na deň?", q1t: "Ako často sa ráno dokážeš tešiť na deň?",
-            q3p: "68 % ľudí vo veku 18–30 rokov sa pravidelne cíti vyčerpane.", q3t: "Kde sa momentálne nachádzaš na tejto stupnici?", q3pos: "Pozitívne", q3dep: "Depresívne",
-            q5p: "Ako často sa ti to stáva?", q5s: "Sedíš v skupine ľudí — priatelia, spolužiaci, kolegovia. Všetci sa smejú. Ty tiež. Ale vnútorne si akosi... inde.", q5t: "Ako často sa ti to stáva?",
-            q6p: "Ľudia s podobnými odpoveďami často dostávajú práceneschopnosť kvôli vyhoreniu.", q6t: "Ktorý detail na obrázku najlepšie opisuje tvoj stav? (Umiestni značku)",
-            q10pl: "Premýšľal si niekedy o vyhľadaní odbornej pomoci — a nakoniec si to neurobil?", q10sm: "Posledná otázka", q10t: "Premýšľal si niekedy o vyhľadaní odbornej pomoci — a nakoniec si to neurobil?",
+            q3t: "Kde sa momentálne nachádzaš na tejto stupnici?", q3pos: "Pozitívne", q3dep: "Depresívne",
+            q6t: "Ktorý detail na obrázku najlepšie opisuje tvoj stav? (Umiestni značku)",
             bnxt: "Pokračovať", bconf: "Potvrdiť",
             l_init: "Spúšťam analýzu...", l_p1: "Načítavam vzorec odpovedí...", l_p2: "Analyzujem indikátory...", l_p3: "Počítam mieru vyčerpania...", l_p4: "Vytváram osobný profil...", l_done: "Vyhodnotenie dokončené",
             r_title: "Výsledky testu na depresiu", r_warn: "Ťažká depresia", r_score_sub: "89 zo 100 bodov", r_desc: "Vaše odpovede naznačujú ťažkú depresiu. Na základe vašich odpovedí sa zdá, že tieto príznaky výrazne ovplyvňujú vaše vzťahy a schopnosť žiť každodenný život.",
@@ -637,10 +659,8 @@
         pl: {
             img: "Ładowanie obrazu...", sn: "Nigdy", sm: "Czasami", so: "Często", si: "Zawsze",
             q1p: "Jak często rano udaje Ci się cieszyć na nadchodzący dzień?", q1t: "Jak często rano udaje Ci się cieszyć na nadchodzący dzień?",
-            q3p: "68% osób w wieku 18–30 lat regularnie czuje się wyczerpanych.", q3t: "Gdzie obecnie znajdujesz się na tej skali?", q3pos: "Pozytywnie", q3dep: "Depresyjnie",
-            q5p: "Jak często Ci się to zdarza?", q5s: "Siedzisz w grupie ludzi — przyjaciele, koledzy z pracy. Wszyscy się śmieją. Ty też. Ale wewnętrznie jesteś jakoś... gdzie indziej.", q5t: "Jak często Ci się to zdarza?",
-            q6p: "Osoby o podobnych odpowiedziach często otrzymują zwolnienie lekarskie z powodu wypalenia.", q6t: "Który szczegół na zdjęciu najlepiej opisuje Twój stan? (Postaw znacznik)",
-            q10pl: "Czy kiedykolwiek myślałeś o szukaniu profesjonalnej pomocy — a potem jednak tego nie zrobiłeś?", q10sm: "Ostatnie pytanie", q10t: "Czy kiedykolwiek myślałeś o szukaniu profesjonalnej pomocy — a potem jednak tego nie zrobiłeś?",
+            q3t: "Gdzie obecnie znajdujesz się na tej skali?", q3pos: "Pozytywnie", q3dep: "Depresyjnie",
+            q6t: "Który szczegół na zdjęciu najlepiej opisuje Twój stan? (Postaw znacznik)",
             bnxt: "Dalej", bconf: "Potwierdź",
             l_init: "Inicjowanie analizy...", l_p1: "Ładowanie wzorca odpowiedzi...", l_p2: "Analiza wskaźników...", l_p3: "Obliczanie poziomu wyczerpania...", l_p4: "Tworzenie profilu osobistego...", l_done: "Analiza zakończona",
             r_title: "Wyniki testu na depresję", r_warn: "Ciężka depresja", r_score_sub: "89 na 100 punktów", r_desc: "Twoje odpowiedzi sugerują ciężką depresję. Na podstawie Twoich odpowiedzi objawy te wydają się znacząco wpływać na Twoje relacje i zdolność do codziennego funkcjonowania.",
@@ -649,10 +669,8 @@
         nl: {
             img: "Afbeelding laden...", sn: "Nooit", sm: "Soms", so: "Vaak", si: "Altijd",
             q1p: "Hoe vaak lukt het je 's ochtends om uit te kijken naar de dag?", q1t: "Hoe vaak lukt het je 's ochtends om uit te kijken naar de dag?",
-            q3p: "68% van de 18-30-jarigen voelt zich regelmatig uitgeput.", q3t: "Waar bevind je je momenteel op deze schaal?", q3pos: "Positief", q3dep: "Depressief",
-            q5p: "Hoe vaak overkomt je dit?", q5s: "Je zit in een groep mensen — vrienden, collega's. Iedereen lacht. Jij ook. Maar van binnen ben je ergens... anders.", q5t: "Hoe vaak overkomt je dit?",
-            q6p: "Personen met vergelijkbare antwoorden krijgen vaak ziekteverlof wegens burn-out.", q6t: "Welk detail in de afbeelding beschrijft jouw toestand het best? (Plaats een markering)",
-            q10pl: "Heb je er ooit aan gedacht om professionele hulp te zoeken — en het toen toch niet gedaan?", q10sm: "Laatste vraag", q10t: "Heb je er ooit aan gedacht om professionele hulp te zoeken — en het toen toch niet gedaan?",
+            q3t: "Waar bevind je je momenteel op deze schaal?", q3pos: "Positief", q3dep: "Depressief",
+            q6t: "Welk detail in de afbeelding beschrijft jouw toestand het best? (Plaats een markering)",
             bnxt: "Verder", bconf: "Bevestigen",
             l_init: "Analyse initialiseren...", l_p1: "Antwoordpatroon laden...", l_p2: "Indicatoren analyseren...", l_p3: "Uitputtingsniveau berekenen...", l_p4: "Persoonlijk profiel aanmaken...", l_done: "Evaluatie voltooid",
             r_title: "Resultaten van de depressietest", r_warn: "Ernstige depressie", r_score_sub: "89 van de 100 punten", r_desc: "Je antwoorden wijzen op een ernstige depressie. Op basis van je antwoorden lijken deze symptomen een aanzienlijke impact te hebben op je relaties en je vermogen om het dagelijks leven te leiden.",
@@ -661,10 +679,8 @@
         es: {
             img: "Cargando imagen...", sn: "Nunca", sm: "A veces", so: "A menudo", si: "Siempre",
             q1p: "¿Con qué frecuencia logras alegrarte por el día al despertar?", q1t: "¿Con qué frecuencia logras alegrarte por el día al despertar?",
-            q3p: "El 68% de los jóvenes de 18 a 30 años se siente agotado regularmente.", q3t: "¿Dónde te encuentras en esta escala en este momento?", q3pos: "Positivo", q3dep: "Depresivo",
-            q5p: "¿Con qué frecuencia te pasa esto?", q5s: "Estás en un grupo de personas — amigos, compañeros, colegas. Todos se ríen. Tú también. Pero por dentro estás... en otro lugar.", q5t: "¿Con qué frecuencia te pasa esto?",
-            q6p: "Las personas con respuestas similares a menudo reciben una baja laboral por burnout.", q6t: "¿Qué detalle de la imagen describe mejor tu estado? (Coloca una marca)",
-            q10pl: "¿Alguna vez has pensado en buscar ayuda profesional — y luego no lo hiciste?", q10sm: "Última pregunta", q10t: "¿Alguna vez has pensado en buscar ayuda profesional — y luego no lo hiciste?",
+            q3t: "¿Dónde te encuentras en esta escala en este momento?", q3pos: "Positivo", q3dep: "Depresivo",
+            q6t: "¿Qué detalle de la imagen describe mejor tu estado? (Coloca una marca)",
             bnxt: "Continuar", bconf: "Confirmar",
             l_init: "Inicializando análisis...", l_p1: "Cargando respuestas...", l_p2: "Analizando indicadores...", l_p3: "Calculando agotamiento...", l_p4: "Creando perfil personal...", l_done: "Evaluación completada",
             r_title: "Resultados del test de depresión", r_warn: "Depresión severa", r_score_sub: "89 de 100 puntos", r_desc: "Tus respuestas sugieren una depresión severa. Según tus respuestas, estos síntomas parecen estar afectando significativamente tus relaciones y tu capacidad para llevar tu vida diaria.",
@@ -673,10 +689,8 @@
         he: {
             img: "טוען תמונה...", sn: "אף פעם", sm: "לפעמים", so: "לעתים קרובות", si: "תמיד",
             q1p: "באיזו תדירות אתה מצליח לקום בבוקר ולצפות ליום שיבוא?", q1t: "באיזו תדירות אתה מצליח לקום בבוקר ולצפות ליום שיבוא?",
-            q3p: "68% מבני 18-30 מרגישים תשושים באופן קבוע.", q3t: "איפה אתה נמצא כרגע על הסקאלה הזו?", q3pos: "חיובי", q3dep: "דיכאוני",
-            q5p: "באיזו תדירות זה קורה לך?", q5s: "אתה יושב בקבוצה של אנשים - חברים, קולגות. כולם צוחקים. גם אתה. אבל בפנים אתה איכשהו... במקום אחר.", q5t: "באיזו תדירות זה קורה לך?",
-            q6p: "אנשים עם תשובות דומות מקבלים לעתים קרובות חופשת מחלה עקב שחיקה.", q6t: "איזה פרט בתמונה מתאר בצורה הטובה ביותר את מצבך? (שים סימן)",
-            q10pl: "האם אי פעם חשבת לחפש עזרה מקצועית - ובסוף לא עשית את זה?", q10sm: "שאלה אחרונה", q10t: "האם אי פעם חשבת לחפש עזרה מקצועית - ובסוף לא עשית את זה?",
+            q3t: "איפה אתה נמצא כרגע על הסקאלה הזו?", q3pos: "חיובי", q3dep: "דיכאוני",
+            q6t: "איזה פרט בתמונה מתאר בצורה הטובה ביותר את מצבך? (שים סימן)",
             bnxt: "המשך", bconf: "אשר",
             l_init: "מאתחל ניתוח...", l_p1: "טוען דפוס תשובות...", l_p2: "מנתח אינדיקטורים...", l_p3: "מחשב רמת תשישות...", l_p4: "יוצר פרופיל אישי...", l_done: "ההערכה הושלמה",
             r_title: "תוצאות מבחן דיכאון", r_warn: "דיכאון חמור", r_score_sub: "89 מתוך 100 נקודות", r_desc: "התשובות שלך מצביעות על דיכאון חמור. בהתבסס על התשובות שלך, נראה כי תסמינים אלה משפיעים באופן משמעותי על מערכות היחסים שלך ועל יכולתך לנהל חיי יום-יום.",
@@ -685,10 +699,8 @@
         ar: {
             img: "جاري تحميل الصورة...", sn: "أبداً", sm: "أحياناً", so: "غالباً", si: "دائماً",
             q1p: "كم مرة تستطيع أن تتطلع إلى يومك في الصباح؟", q1t: "كم مرة تستطيع أن تتطلع إلى يومك في الصباح؟",
-            q3p: "68% من الأشخاص الذين تتراوح أعمارهم بين 18 و 30 عاماً يشعرون بالإرهاق بانتظام.", q3t: "أين تجد نفسك على هذا المقياس الآن؟", q3pos: "إيجابي", q3dep: "مكتئب",
-            q5p: "كم مرة يحدث لك هذا؟", q5s: "أنت تجلس في مجموعة من الناس — أصدقاء، زملاء. الجميع يضحك. أنت أيضاً. ولكن من الداخل أنت بطريقة ما... في مكان آخر.", q5t: "كم مرة يحدث لك هذا؟",
-            q6p: "الأشخاص الذين لديهم إجابات مماثلة غالباً ما يحصلون على إجازة مرضية بسبب الإرهاق.", q6t: "أي تفصيل في الصورة يصف حالتك بشكل أفضل؟ (ضع علامة)",
-            q10pl: "هل فكرت يوماً في طلب مساعدة متخصصة — ثم لم تفعل ذلك في النهاية؟", q10sm: "السؤال الأخير", q10t: "هل فكرت يوماً في طلب مساعدة متخصصة — ثم لم تفعل ذلك في النهاية؟",
+            q3t: "أين تجد نفسك على هذا المقياس الآن؟", q3pos: "إيجابي", q3dep: "مكتئب",
+            q6t: "أي تفصيل في الصورة يصف حالتك بشكل أفضل؟ (ضع علامة)",
             bnxt: "التالي", bconf: "تأكيد",
             l_init: "بدء التحليل...", l_p1: "تحميل نمط الإجابة...", l_p2: "تحليل المؤشرات...", l_p3: "حساب مستوى الإرهاق...", l_p4: "إنشاء الملف الشخصي...", l_done: "اكتمل التقييم",
             r_title: "نتائج اختبار الاكتئاب", r_warn: "اكتئاب حاد", r_score_sub: "89 من أصل 100 نقطة", r_desc: "تشير إجاباتك إلى اكتئاب حاد. بناءً على إجاباتك، يبدو أن هذه الأعراض تؤثر بشكل كبير على علاقاتك وقدرتك على عيش حياتك اليومية.",
@@ -697,10 +709,8 @@
         ja: {
             img: "画像を読み込んでいます...", sn: "全くない", sm: "時々", so: "よくある", si: "いつも",
             q1p: "朝、その日一日に期待を持つことがどのくらいありますか？", q1t: "朝、その日一日に期待を持つことがどのくらいありますか？",
-            q3p: "18〜30歳の68%が定期的に疲労を感じています。", q3t: "現在、このスケールでどの位置にいますか？", q3pos: "ポジティブ", q3dep: "憂鬱",
-            q5p: "このようなことがどのくらい起きますか？", q5s: "友人の集まりにいます。みんな笑っています。あなたも笑っています。しかし内心、あなたはどこか...別の場所にいます。", q5t: "このようなことがどのくらい起きますか？",
-            q6p: "似たような回答をした人は、燃え尽き症候群で休職することがよくあります。", q6t: "画像のどの詳細があなたの状態を最もよく表していますか？（マークを配置）",
-            q10pl: "専門家の助けを求めようと考えたことはありますか — そして結局そうしなかったことは？", q10sm: "最後の質問", q10t: "専門家の助けを求めようと考えたことはありますか — そして結局そうしなかったことは？",
+            q3t: "現在、このスケールでどの位置にいますか？", q3pos: "ポジティブ", q3dep: "憂鬱",
+            q6t: "画像のどの詳細があなたの状態を最もよく表していますか？（マークを配置）",
             bnxt: "次へ", bconf: "確認",
             l_init: "分析を初期化中...", l_p1: "回答を読み込み中...", l_p2: "指標を分析中...", l_p3: "疲労度を計算中...", l_p4: "プロフィールを作成中...", l_done: "評価完了",
             r_title: "うつ病テストの結果", r_warn: "重度のうつ病", r_score_sub: "100点満点中89点", r_desc: "あなたの回答は、重度のうつ病であることを示唆しています。回答に基づくと、これらの症状は、人間関係や日常生活を送る能力に大きな影響を与えているようです。",
@@ -709,10 +719,8 @@
         ru: {
             img: "Загрузка изображения...", sn: "Никогда", sm: "Иногда", so: "Часто", si: "Всегда",
             q1p: "Как часто тебе удается с утра радоваться предстоящему дню?", q1t: "Как часто тебе удается с утра радоваться предстоящему дню?",
-            q3p: "68% молодых людей в возрасте 18-30 лет регулярно чувствуют себя истощенными.", q3t: "Где ты находишься на этой шкале прямо сейчас?", q3pos: "Позитив", q3dep: "Депрессия",
-            q5p: "Как часто с тобой такое случается?", q5s: "Ты сидишь в группе людей — друзья, сокурсники, коллеги. Все смеются. Ты тоже. Но внутренне ты как будто... в другом месте.", q5t: "Как часто с тобой такое случается?",
-            q6p: "Люди с похожими ответами часто получают больничный из-за выгорания.", q6t: "Какая деталь на картинке лучше всего описывает твое состояние? (Поставь метку)",
-            q10pl: "Думал ли ты когда-нибудь обратиться за профессиональной помощью — но так и не сделал этого?", q10sm: "Последний вопрос", q10t: "Думал ли ты когда-нибудь обратиться за профессиональной помощью — но так и не сделал этого?",
+            q3t: "Где ты находишься на этой шкале прямо сейчас?", q3pos: "Позитив", q3dep: "Депрессия",
+            q6t: "Какая деталь на картинке лучше всего описывает твое состояние? (Поставь метку)",
             bnxt: "Далее", bconf: "Подтвердить",
             l_init: "Инициализация анализа...", l_p1: "Загрузка шаблона ответов...", l_p2: "Анализ индикаторов...", l_p3: "Расчет уровня истощения...", l_p4: "Создание личного профиля...", l_done: "Оценка завершена",
             r_title: "Результаты теста на депрессию", r_warn: "Тяжелая депрессия", r_score_sub: "89 из 100 баллов", r_desc: "Ваши ответы указывают на тяжелую депрессию. Судя по вашим ответам, эти симптомы существенно влияют на ваши отношения и способность вести повседневную жизнь.",
@@ -721,10 +729,8 @@
         uk: {
             img: "Завантаження зображення...", sn: "Ніколи", sm: "Іноді", so: "Часто", si: "Завжди",
             q1p: "Як часто тобі вдається зранку радіти майбутньому дню?", q1t: "Як часто тобі вдається зранку радіти майбутньому дню?",
-            q3p: "68% молодих людей у віці 18-30 років регулярно відчувають себе виснаженими.", q3t: "Де ти знаходишся на цій шкалі прямо зараз?", q3pos: "Позитив", q3dep: "Депресія",
-            q5p: "Як часто з тобою таке трапляється?", q5s: "Ти сидиш у групі людей — друзі, однокурсники, колеги. Всі сміються. Ти теж. Але внутрішньо ти ніби... в іншому місці.", q5t: "Як часто з тобою таке трапляється?",
-            q6p: "Люди зі схожими відповідями часто отримують лікарняний через вигорання.", q6t: "Яка деталь на картинці найкраще описує твій стан? (Постав мітку)",
-            q10pl: "Чи думав ти коли-небудь звернутися по професійну допомогу — але так і не зробив цього?", q10sm: "Останнє запитання", q10t: "Чи думав ти коли-небудь звернутися по професійну допомогу — але так і не зробив цього?",
+            q3t: "Де ти знаходишся на цій шкалі прямо зараз?", q3pos: "Позитив", q3dep: "Депресія",
+            q6t: "Яка деталь на картинці найкраще описує твій стан? (Постав мітку)",
             bnxt: "Далі", bconf: "Підтвердити",
             l_init: "Ініціалізація аналізу...", l_p1: "Завантаження шаблону відповідей...", l_p2: "Аналіз індикаторів...", l_p3: "Розрахунок рівня виснаження...", l_p4: "Створення особистого профілю...", l_done: "Оцінка завершена",
             r_title: "Результати тесту на депресію", r_warn: "Важка депресія", r_score_sub: "89 зі 100 балів", r_desc: "Ваші відповіді вказують на важку депресію. Судячи з ваших відповідей, ці симптоми суттєво впливають на ваші стосунки та здатність вести повсякденне життя.",
@@ -805,7 +811,6 @@
         questions[0].payloadText = t.q1p;
         questions[0].html = `<div class="q-title">${t.q1t}</div>${runtimeSmileys}`;
 
-        questions[1].popup = t.q3p;
         questions[1].html = `
             <div class="q-title">${t.q3t}</div>
             <div class="slider-container">
@@ -823,11 +828,7 @@
             </div>
         `;
 
-        questions[2].payloadText = t.q5p;
-        questions[2].html = `<div class="scene-text">${t.q5s}</div><div class="q-subtitle">${t.q5t}</div>${runtimeSmileys}`;
-
-        questions[3].popup = t.q6p;
-        questions[3].html = `
+        questions[2].html = `
             <div class="q-title">${t.q6t}</div>
             <div class="image-map-container img-placeholder" data-loading-text="${t.img}" onclick="placeMarker(event, this)">
                 <img src="https://i.ibb.co/GfRxgTSb/foxes.avif" class="q6-image img-loading" alt="Zustand Bild" onload="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');" onerror="this.classList.remove('img-loading'); this.parentElement.classList.remove('img-placeholder');">
@@ -835,9 +836,6 @@
             </div>
             <button class="next-btn" id="q6-btn" onclick="nextQuestion()" style="width: 100%;">${t.bconf}</button>
         `;
-
-        questions[4].payloadText = t.q10pl;
-        questions[4].html = `<div class="small-subtitle delay-fade">${t.q10sm}</div><div class="q-title delay-fade">${t.q10t}</div><div class="delay-fade">${runtimeSmileys}</div>`;
 
         // Translate UI
         document.getElementById('loader-status').textContent = t.l_init;
@@ -893,7 +891,7 @@
         </div>
     `;
 
-    // Questions Data (Strictly keeping Q1, Q3, Q5, Q6 and Q10 logic)
+    // Questions Data (Strictly keeping Q1, Q3 (Slider), and Q6 (Imagemap) logic)
     const questions = [
         {   // Q1
             payloadText: "Wie oft schaffst du es morgens, dich auf den Tag zu freuen?",
@@ -902,7 +900,7 @@
                 ${smileysHtml}
             `
         },
-        {   // Q3 - Slider (Index 1)
+        {   // Q2 (Slider)
             html: `
                 <div class="q-title">Wo befindest du dich gerade auf dieser Skala?</div>
                 <div class="slider-container">
@@ -920,15 +918,8 @@
                 </div>
             `
         },
-        {   // Q5 (Index 2)
-            payloadText: "Wie oft fühlst du dich innerlich abwesend, obwohl du in einer Gruppe bist?",
-            html: `
-                <div class="scene-text">Du sitzt in einer Gruppe von Menschen — Freunde, Kommilitonen, Kollegen. Alle lachen. Du auch. Aber innerlich bist du irgendwie... woanders.</div>
-                <div class="q-subtitle">Wie oft passiert dir das?</div>
-                ${smileysHtml}
-            `
-        },
-        {   // Q6 - Imagemap (Index 3)
+        {   // Q3 (Imagemap) - Last
+            isLast: true,
             html: `
                 <div class="q-title">Welches Detail im Bild beschreibt deinen Zustand am besten? (Setze eine Markierung)</div>
                 <div class="image-map-container img-placeholder" data-loading-text="Bild wird geladen..." onclick="placeMarker(event, this)">
@@ -936,16 +927,6 @@
                     <div class="marker" id="q6-marker"></div>
                 </div>
                 <button class="next-btn" id="q6-btn" onclick="nextQuestion()" style="width: 100%;">Bestätigen</button>
-            `
-        },
-        {   // Q10 - Last (Index 4)
-            quiet: true,
-            isLast: true,
-            payloadText: "Hast du jemals daran gedacht, dir professionelle Hilfe zu suchen — und es dann doch nicht getan?",
-            html: `
-                <div class="small-subtitle delay-fade">Letzte Frage</div>
-                <div class="q-title delay-fade">Hast du jemals daran gedacht, dir professionelle Hilfe zu suchen — und es dann doch nicht getan?</div>
-                <div class="delay-fade">${smileysHtml}</div>
             `
         }
     ];
@@ -1040,8 +1021,8 @@
             answers.verbalAnswers = [];
             questions.forEach((q, idx) => {
                 const qNum = idx + 1;
-                // Index 1 (Slider) and Index 3 (Imagemap) are image questions
-                if (qNum === 2 || qNum === 4) return; 
+                // Index 1 (Slider) and Index 2 (Imagemap) are image questions
+                if (qNum === 2 || qNum === 3) return; 
 
                 let finalAnswer = testState.answers['q' + qNum] || (window.notAnsweredText || "Nicht beantwortet");
                 answers.verbalAnswers.push({
@@ -1086,17 +1067,15 @@
         slide.classList.add('active');
     }
 
-    // Battery Logic for 5 Questions
+    // Battery Logic for 3 Questions
     function updateBattery(index) {
         const mappings = [
             {p: 100, c: 'var(--green)'}, // Q1
-            {p: 80, c: 'var(--green)'},  // Q2
-            {p: 60, c: 'var(--yellow)'}, // Q3
-            {p: 40, c: 'var(--yellow)'}, // Q4
-            {p: 20, c: 'var(--red)'}     // Q5
+            {p: 50, c: 'var(--yellow)'}, // Q2
+            {p: 10, c: 'var(--red)'}     // Q3
         ];
 
-        const cfg = mappings[index] || mappings[4];
+        const cfg = mappings[index] || mappings[2];
         const batteryFill = document.getElementById('battery-fill');
         const batteryText = document.getElementById('battery-text');
         
